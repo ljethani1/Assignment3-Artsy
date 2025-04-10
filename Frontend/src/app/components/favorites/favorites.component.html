@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <div *ngIf="!loading && favorites.length === 0" class="alert alert-danger text-center">
+  <div *ngIf="!loading && favorites.length === 0" class="alert alert-danger text-left">
     No favorite artists.
   </div>
 
@@ -25,17 +25,17 @@
           <h6 class="fw-bold mb-1">{{ artist.name }}</h6>
           <small class="d-block">{{ artist.birthday || '—' }} - {{ artist.deathday || '' }}</small>
           <small class="text-light">{{ artist.nationality }}</small>
-          <p class="mt-2 mb-0 text-light small">
-            {{ getRelativeTime(artist.addedAt) }}
-          </p>
         </div>
-        <button
-          class="btn btn-sm btn-light text-danger position-absolute bottom-0 end-0 m-2 z-3"
-          (click)="removeFavorite(artist.id); $event.stopPropagation()"
-        >
-          Remove
-        </button>
-      </div>
+        <div class="d-flex justify-content-between align-items-center mb-2 px-3 pb-2 position-relative z-2">
+          <small class="text-light">{{ getRelativeTime(artist.addedAt) }}</small>
+          <a
+            href="#"
+            class="text-white text-decoration-underline small"
+            (click)="removeFavorite(artist.id); $event.preventDefault(); $event.stopPropagation()"
+          >
+            Remove
+          </a>
+        </div>
     </div>
   </div>
-</div>
+</div> 

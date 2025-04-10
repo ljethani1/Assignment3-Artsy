@@ -1,7 +1,6 @@
 .artist-card {
   overflow: hidden;
   border: none;
-  border-radius: 1rem;
   height: 100%;
   position: relative;
   display: flex;
@@ -23,7 +22,6 @@
   transition: filter 0.3s ease;
 }
 
-/* Optional hover effect */
 .artist-card:hover .artist-bg {
   filter: blur(6px) brightness(0.6);
 }
@@ -31,7 +29,7 @@
 .card-body {
   z-index: 2;
   position: relative;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+  background: linear-gradient(to top, rgba(0,0,0,0.2), rgba(0,0,0,0));
   padding: 1rem;
   color: white;
   min-height: 140px;
@@ -49,9 +47,3 @@
   color: #ccc !important;
 }
 
-.remove-btn {
-  z-index: 3;
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-}

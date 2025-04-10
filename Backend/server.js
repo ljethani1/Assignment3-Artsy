@@ -98,6 +98,14 @@ async function checkArtsyToken() {
 
 getArtsyToken();
 
+const normalizeBiography = (bio) => {
+  if (!bio) return "";
+  return bio
+    .replace(/\u00A0/g, " ") // Replace non-breaking space with normal space
+    .replace(/\u0096|\u2013|\u2014|\u2012/g, "-") // Replace weird dashes with hyphen
+    .replace(/–|—/g, "-"); // Also cover en/em dashes
+};
+
 function checkAuth(req, res, next) {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ message: "Not logged in" });
@@ -126,10 +134,12 @@ app.post("/api/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const avatar = `https://www.gravatar.com/avatar/${crypto
-      .createHash("md5")
+    const hash = crypto
+      .createHash("sha256")
       .update(email.toLowerCase().trim())
-      .digest("hex")}`;
+      .digest("hex");
+
+    const avatar = `https://www.gravatar.com/avatar/${hash}?d=identicon`;
 
     const newUser = new User({ name, email, password: hashedPassword, avatar });
     await newUser.save();
@@ -261,6 +271,11 @@ app.get("/api/artist/:id", async (req, res) => {
     const { data } = await axios.get(`${ARTSY_URL}/artists/${req.params.id}`, {
       headers: { "X-XAPP-Token": artsyToken },
     });
+
+    if (data.biography) {
+      data.biography = normalizeBiography(data.biography);
+    }
+
     res.json(data);
   } catch (error) {
     return res.status(error.response?.status || 500).json({
@@ -268,6 +283,7 @@ app.get("/api/artist/:id", async (req, res) => {
     });
   }
 });
+
 
 app.get("/api/artworks/:id", async (req, res) => {
   try {
@@ -318,6 +334,7 @@ app.get("/api/similar/:artistId", checkAuth, async (req, res) => {
 app.get("/api/search", async (req, res) => {
   try {
     const { q } = req.query;
+    console.log(q);
     if (!q) return res.status(400).json({ message: "Query is required" });
 
     await checkArtsyToken();

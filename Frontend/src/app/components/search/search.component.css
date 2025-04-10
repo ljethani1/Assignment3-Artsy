@@ -8,6 +8,7 @@
   overflow-x: auto;
   white-space: nowrap;
   padding-bottom: 1rem;
+  padding-right: 1rem; 
   scrollbar-gutter: stable both-edges;
 }
 
@@ -24,12 +25,14 @@
 
 .scroll-cards {
   display: inline-flex;
-  flex-wrap: nowrap;
   gap: 1rem;
+  padding-right: 0.5rem;
 }
+
 
 .custom-card {
   width: 250px;
+  min-width: 250px;
   flex-shrink: 0;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -52,10 +55,12 @@
   font-size: 0.95rem;
   background-color: #0d6efd;
   color: #fff;
-  text-align: center;
+  text-align: left;
   border-top: none;
   padding: 0.5rem;
+  padding-left: 0.75rem;
 }
+
 
 .footer-selected {
   background-color: #053883 !important;
@@ -65,8 +70,12 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  background-color: #053883;
-  padding: 6px;
+  width: 36px;
+  height: 36px;
+  background-color: #0d6efd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   z-index: 10;
 }
@@ -101,13 +110,16 @@
 }
 
 .artist-bio p {
-  word-wrap: break-word;
-  white-space: normal;
-  line-height: 1.5;
+  margin-bottom: 1rem;
+  text-align: justify !important; /* <- Apply directly to paragraphs too */
 }
+
 .artist-bio {
   font-size: 0.95rem;
   padding: 0 1rem;
+  line-height: 1.6;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 @media (max-width: 576px) {
@@ -126,4 +138,11 @@
 .category-img {
   height: 200px;
   object-fit: cover;
+}
+
+
+@media (max-width: 576px) {
+  .artist-bio {
+    padding: 0 1 rem;
+  }
 }

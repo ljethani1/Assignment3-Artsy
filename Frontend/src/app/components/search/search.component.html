@@ -49,9 +49,8 @@
               [alt]="artist.name"
             />
           </div>
-
           <div
-            class="card-footer cursor-pointer text-white text-center py-2"
+            class="card-footer cursor-pointer text-white py-2"
             [ngClass]="{
               'footer-selected': selectedArtistId === getArtistId(artist)
             }"
@@ -103,10 +102,11 @@
           ></fa-icon>
         </h5>
         <p class="text-muted">
+        <ng-container *ngIf="artistDetails.nationality">
           {{ artistDetails.nationality }},
-          {{ artistDetails.birthday || '' }} - {{ artistDetails.deathday || '' }}
+        </ng-container>
+        {{ artistDetails.birthday || '' }} - {{ artistDetails.deathday || '' }}
         </p>
-
         <div
           *ngIf="artistDetails.biography"
           class="artist-bio text-start mx-auto mt-3"
@@ -144,45 +144,52 @@
                   <img [src]="getImageUrl(artist)" class="card-img-top" />
                 </div>
 
-                <div class="card-footer text-white fw-semibold text-center py-2">
+                <div class="card-footer text-white fw-semibold py-2">
                   {{ artist.name }}
                 </div>
+
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div *ngIf="activeTab === 'artworks'">
-        <div class="row mt-4 gx-3 gy-4">
-          <div
-            *ngFor="let art of artworks"
-            class="col-12 col-sm-6 col-md-4 col-lg-3"
-          >
-            <div class="card h-100 d-flex flex-column">
-              <img
-                [src]="art._links?.thumbnail?.href"
-                class="card-img-top"
-                [alt]="art.title"
-              />
-              <div class="card-body text-center py-2">
-                <p class="mb-1">
-                  {{ art.title }}, {{ art.date || 'N/A' }}
-                </p>
-              </div>
-              <div class="card-footer p-0">
-                <button
-                  class="btn btn-view-categories w-100 rounded-0"
-                  (click)="openCategoriesModal(art)"
-                >
-                  View categories
-                </button>
-              </div>
-            </div>
+<div *ngIf="activeTab === 'artworks'">
+  <div *ngIf="artworks.length; else noArtworks">
+    <div class="row mt-4 gx-3 gy-4">
+      <div
+        *ngFor="let art of artworks"
+        class="col-12 col-sm-6 col-md-4 col-lg-3"
+      >
+        <div class="card h-100 d-flex flex-column">
+          <img
+            [src]="art._links?.thumbnail?.href"
+            class="card-img-top"
+            [alt]="art.title"
+          />
+          <div class="card-body text-center py-2">
+            <p class="mb-1">
+              {{ art.title }}, {{ art.date || 'N/A' }}
+            </p>
+          </div>
+          <div class="card-footer p-0">
+            <button
+              class="btn btn-view-categories w-100 rounded-0"
+              (click)="openCategoriesModal(art)"
+            >
+              View categories
+            </button>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <ng-template #noArtworks>
+    <div class="alert alert-danger mt-4">
+      No artworks found.
+    </div>
+  </ng-template>
+</div>
 
     <div
       class="modal fade"

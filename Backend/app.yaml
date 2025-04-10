@@ -1,0 +1,13 @@
+runtime: nodejs20
+env: standard
+
+env_variables:
+  MONGO_URI: "mongodb+srv://ljethani:vlhOUoBhaNiUpzVN@cluster0.qhmw4.mongodb.net/HW3?retryWrites=true&w=majority&appName=Cluster0"
+  JWT_SECRET: "mysecretforjwt"
+  ARTSY_CLIENT_ID: "2e5f9cbcd870584db45f"
+  ARTSY_CLIENT_SECRET: "d598d3c9958306c0cda7d9d3070ed2b0"
+  FRONTEND_URL: "https://artsy-assignment3.wl.r.appspot.com"
+
+handlers:
+  - url: /.*
+    script: auto

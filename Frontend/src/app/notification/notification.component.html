@@ -1,0 +1,14 @@
+<div class="notification-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+  <div
+    *ngFor="let n of notificationService.notifications$ | async"
+    class="alert alert-{{ n.type }} d-flex justify-content-between align-items-center mb-2 shadow"
+    role="alert"
+  >
+    {{ n.message }}
+    <button
+      type="button"
+      class="btn-close ms-2"
+      (click)="notificationService.dismiss(n.id)"
+    ></button>
+  </div>
+</div>

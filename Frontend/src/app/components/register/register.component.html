@@ -1,0 +1,72 @@
+<div class="auth-container">
+  <div class="card p-4 shadow-sm" style="width: 350px;">
+    <h3 class="mb-4">Register</h3>
+
+    <form #registerForm="ngForm" (ngSubmit)="register()" novalidate>
+      <div class="mb-3">
+        <label class="form-label">Fullname</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="name"
+          name="name"
+          #nameCtrl="ngModel"
+          required
+          placeholder="John Doe"
+          (blur)="nameTouched = true"
+          [ngClass]="{ 'is-invalid': nameTouched && nameCtrl.invalid }"
+        />
+        <div class="invalid-feedback">Fullname is required.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email address</label>
+        <input
+          type="email"
+          class="form-control"
+          [(ngModel)]="email"
+          name="email"
+          #emailCtrl="ngModel"
+          required
+          email
+          placeholder="Enter email"
+          (blur)="emailTouched = true"
+          [ngClass]="{
+            'is-invalid': (emailTouched && emailCtrl.invalid) || message
+          }"
+        />
+        <div class="invalid-feedback">
+          {{
+            emailTouched && emailCtrl.invalid
+              ? 'Email must be valid.'
+              : message
+          }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          [(ngModel)]="password"
+          name="password"
+          #passwordCtrl="ngModel"
+          required
+          placeholder="Password"
+          (blur)="passwordTouched = true"
+          [ngClass]="{ 'is-invalid': passwordTouched && passwordCtrl.invalid }"
+        />
+        <div class="invalid-feedback">Password is required.</div>
+      </div>
+
+
+      <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+  </div>
+
+  <p class="auth-switch">
+    Already have an account?
+    <a href="#" class="text-primary" (click)="navigateToLogin($event)">Login</a>
+  </p>
+</div>

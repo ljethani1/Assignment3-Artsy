@@ -1,0 +1,13 @@
+.titleArtist{
+    font-family: Arial, sans-serif;
+}
+
+footer{
+    background-color: #2c3134;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 0;
+}

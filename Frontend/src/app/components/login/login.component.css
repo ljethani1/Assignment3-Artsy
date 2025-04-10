@@ -1,0 +1,13 @@
+.auth-container {
+  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.auth-switch {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+}

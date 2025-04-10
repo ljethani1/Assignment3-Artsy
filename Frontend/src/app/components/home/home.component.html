@@ -1,0 +1,108 @@
+<div class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
+    <a class="navbar-brand titleArtist" routerLink="/">Artist Search</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+  <div class="ms-auto d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 mt-3 mt-lg-0">
+    <ng-container *ngIf="!user">
+      <a
+        routerLink="/search"
+        class="btn"
+        [ngClass]="{ 'btn-primary': isActive('/search') }"
+      >
+        Search
+      </a>
+      <a
+        routerLink="/login"
+        class="btn"
+        [ngClass]="{ 'btn-primary': isActive('/login') }"
+      >
+        Log in
+      </a>
+      <a
+        routerLink="/register"
+        class="btn"
+        [ngClass]="{ 'btn-primary': isActive('/register') }"
+      >
+        Register
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="user">
+      <a
+        routerLink="/search"
+        class="btn"
+        [ngClass]="{ 'btn-primary': isActive('/search') }"
+      >
+        Search
+      </a>
+      <a
+        routerLink="/favorites"
+        class="btn"
+        [ngClass]="{ 'btn-primary': isActive('/favorites') }"
+      >
+        Favorites
+      </a>
+      <div class="dropdown w-100 d-flex justify-content-center justify-content-lg-end">
+        <a
+          class="d-flex align-items-center text-decoration-none dropdown-toggle"
+          href="#"
+          role="button"
+          data-bs-toggle="dropdown"
+        >
+          <img
+            [src]="user.avatar"
+            alt="avatar"
+            width="32"
+            height="32"
+            class="rounded-circle me-2"
+          />
+          <strong>{{ user.name }}</strong>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <button class="dropdown-item text-danger" (click)="deleteAccount()">Delete account</button>
+          </li>
+          <li>
+            <button class="dropdown-item text-primary" (click)="logout()">Log out</button>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+  </nav>
+
+  <div class="container flex-grow-1 py-4">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer>
+    <a
+      href="https://www.artsy.net/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="d-inline-flex align-items-center gap-2 text-white text-decoration-none"
+    >
+      <span>Powered by</span>
+      <img
+        src="/static/artsy_logo.svg"
+        alt="Artsy logo"
+        height="24"
+      />
+      <span>Artsy</span>
+    </a>
+  </footer>
+</div>

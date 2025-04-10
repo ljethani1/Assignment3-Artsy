@@ -1,0 +1,248 @@
+<div class="container mt-4">
+  <div class="content-wrapper">
+
+    <div class="input-group mb-4">
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="query"
+        placeholder="Please enter an artist name."
+        (keyup.enter)="search()"
+      />
+      <button class="btn btn-primary" (click)="search()">Search</button>
+      <button class="btn btn-secondary" (click)="clear()">Clear</button>
+    </div>
+
+    <div *ngIf="loading" class="text-center my-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading search results...</span>
+      </div>
+    </div>
+
+    <div *ngIf="results.length" class="scroll-wrapper">
+      <div class="scroll-cards">
+        <div
+          *ngFor="let artist of results; trackBy: trackByArtist"
+          class="custom-card cursor-pointer card position-relative"
+          (click)="selectArtist(artist)"
+        >
+          <div
+            *ngIf="user"
+            class="favorite-icon-wrapper"
+            (click)="toggleFavorite(artist, $event)"
+            (pointerdown)="$event.stopPropagation()"
+          >
+            <fa-icon
+              [icon]="isFavorite(artist) ? 'star' : ['far', 'star']"
+              class="fs-5"
+              [ngClass]="{
+                'text-warning': isFavorite(artist),
+                'text-white': !isFavorite(artist)
+              }"
+            ></fa-icon>
+          </div>
+
+          <div class="card-img-container">
+            <img
+              [src]="getImageUrl(artist)"
+              class="card-img-top"
+              [alt]="artist.name"
+            />
+          </div>
+
+          <div
+            class="card-footer cursor-pointer text-white text-center py-2"
+            [ngClass]="{
+              'footer-selected': selectedArtistId === getArtistId(artist)
+            }"
+          >
+            {{ artist.title || artist.name }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="submitted && !loading && !results.length"
+      class="alert alert-danger mt-4"
+    >
+      No results.
+    </div>
+
+    <div *ngIf="selectedArtist && artistDetails">
+      <div class="tab-buttons-container my-4 row g-0">
+        <div class="col-6">
+          <button
+            class="btn w-100"
+            [ngClass]="{ 'btn-primary colorTab': activeTab === 'info' }"
+            (click)="switchTab('info')"
+          >
+            Artist Info
+          </button>
+        </div>
+        <div class="col-6">
+          <button
+            class="btn w-100"
+            [ngClass]="{ 'btn-primary colorTab': activeTab === 'artworks' }"
+            (click)="switchTab('artworks')"
+          >
+            Artworks
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'info'" class="artist-info text-center">
+        <h5>
+          {{ artistDetails.name }}
+          <fa-icon
+            *ngIf="user"
+            [icon]="isFavorite(artistDetails) ? 'star' : ['far', 'star']"
+            class="cursor-pointer ms-2"
+            [ngClass]="{ 'text-warning': isFavorite(artistDetails) }"
+            (click)="toggleFavorite(artistDetails, $event)"
+          ></fa-icon>
+        </h5>
+        <p class="text-muted">
+          {{ artistDetails.nationality }},
+          {{ artistDetails.birthday || '' }} - {{ artistDetails.deathday || '' }}
+        </p>
+
+        <div
+          *ngIf="artistDetails.biography"
+          class="artist-bio text-start mx-auto mt-3"
+        >
+          <p *ngFor="let para of splitParagraphs(artistDetails.biography)">
+            {{ para }}
+          </p>
+        </div>
+
+        <div *ngIf="similarArtists.length" class="mt-5 text-start">
+          <h5 class="fw-bold">Similar Artists</h5>
+          <div class="scroll-wrapper">
+            <div class="scroll-cards mt-3">
+              <div
+                *ngFor="let artist of similarArtists"
+                class="custom-card card position-relative cursor-pointer"
+                (click)="selectArtist(artist)"
+              >
+                <div
+                  class="favorite-icon-wrapper"
+                  (click)="toggleFavorite(artist, $event)"
+                  (pointerdown)="$event.stopPropagation()"
+                >
+                  <fa-icon
+                    [icon]="isFavorite(artist) ? 'star' : ['far', 'star']"
+                    class="fs-5"
+                    [ngClass]="{
+                      'text-warning': isFavorite(artist),
+                      'text-white': !isFavorite(artist)
+                    }"
+                  ></fa-icon>
+                </div>
+
+                <div class="card-img-container">
+                  <img [src]="getImageUrl(artist)" class="card-img-top" />
+                </div>
+
+                <div class="card-footer text-white fw-semibold text-center py-2">
+                  {{ artist.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'artworks'">
+        <div class="row mt-4 gx-3 gy-4">
+          <div
+            *ngFor="let art of artworks"
+            class="col-12 col-sm-6 col-md-4 col-lg-3"
+          >
+            <div class="card h-100 d-flex flex-column">
+              <img
+                [src]="art._links?.thumbnail?.href"
+                class="card-img-top"
+                [alt]="art.title"
+              />
+              <div class="card-body text-center py-2">
+                <p class="mb-1">
+                  {{ art.title }}, {{ art.date || 'N/A' }}
+                </p>
+              </div>
+              <div class="card-footer p-0">
+                <button
+                  class="btn btn-view-categories w-100 rounded-0"
+                  (click)="openCategoriesModal(art)"
+                >
+                  View categories
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="categoriesModal"
+      tabindex="-1"
+      aria-labelledby="categoriesModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header d-flex gap-3">
+            <img
+              *ngIf="selectedArtwork?._links?.thumbnail?.href"
+              [src]="selectedArtwork._links.thumbnail.href"
+              style="width: 45px; height: 45px; object-fit: cover;"
+            />
+            <div>
+              <div class="modal-title" id="categoriesModalLabel">
+                {{ selectedArtwork?.title }}
+              </div>
+              <div>{{ selectedArtwork?.date || 'Unknown' }}</div>
+            </div>
+            <button
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div *ngIf="loadingCategories" class="text-center my-4">
+              <div class="spinner-border text-primary"></div>
+            </div>
+            <div
+              *ngIf="!loadingCategories && categories.length === 0"
+              class="text-center text-muted"
+            >
+              No categories.
+            </div>
+            <div *ngIf="!loadingCategories && categories.length" class="row g-3">
+              <div
+                *ngFor="let category of categories"
+                class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex"
+              >
+                <div class="card text-center w-100 h-100 d-flex flex-column">
+                  <img
+                    [src]="category._links?.thumbnail?.href"
+                    class="card-img-top object-fit-cover category-img"
+                    alt="Category image"
+                  />
+                  <div class="card-body p-2 d-flex align-items-center justify-content-center">
+                    <small class="fw-semibold">{{ category.name }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

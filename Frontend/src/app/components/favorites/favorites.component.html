@@ -1,0 +1,41 @@
+<div class="container mt-4">
+  <h4 class="fw-bold mb-4">Favorites</h4>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && favorites.length === 0" class="alert alert-danger text-center">
+    No favorite artists.
+  </div>
+
+  <div class="row g-3" *ngIf="!loading && favorites.length > 0">
+  <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let artist of favorites">
+      <div
+        class="card artist-card h-100 position-relative text-white overflow-hidden"
+        (click)="navigateToArtist(artist)"
+      >
+        <div
+          class="artist-bg position-absolute top-0 start-0 w-100 h-100"
+          [style.backgroundImage]="'url(' + getImageUrl(artist) + ')'"
+        ></div>
+        <div class="card-body position-relative z-2">
+          <h6 class="fw-bold mb-1">{{ artist.name }}</h6>
+          <small class="d-block">{{ artist.birthday || '—' }} - {{ artist.deathday || '' }}</small>
+          <small class="text-light">{{ artist.nationality }}</small>
+          <p class="mt-2 mb-0 text-light small">
+            {{ getRelativeTime(artist.addedAt) }}
+          </p>
+        </div>
+        <button
+          class="btn btn-sm btn-light text-danger position-absolute bottom-0 end-0 m-2 z-3"
+          (click)="removeFavorite(artist.id); $event.stopPropagation()"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

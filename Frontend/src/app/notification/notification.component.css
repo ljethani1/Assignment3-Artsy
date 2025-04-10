@@ -1,0 +1,23 @@
+.notification-container {
+  width: 300px;
+  max-width: 90vw; 
+  top: 2.5rem !important;
+  right: 0.75rem;
+  left: auto;
+  z-index: 1080;
+}
+
+
+@media (max-width: 576px) {
+  .notification-container .alert {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .notification-container {
+    width: auto;
+    max-width: 90vw;
+    right: 1rem;
+    top: 1rem !important;
+  }
+}
